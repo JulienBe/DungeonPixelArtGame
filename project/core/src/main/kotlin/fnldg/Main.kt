@@ -9,6 +9,7 @@ import ktx.app.KtxScreen
 import ktx.app.clearScreen
 import ktx.assets.disposeSafely
 import ktx.assets.toInternalFile
+import ktx.collections.GdxArray
 import ktx.graphics.use
 
 class Main : KtxGame<KtxScreen>() {
@@ -22,6 +23,7 @@ class FirstScreen : KtxScreen {
   private val image = Texture("logo.png".toInternalFile(), true).apply { setFilter(Linear, Linear) }
   private val batch = SpriteBatch()
   private val pixmap = getPixMap(image)
+  private val particles = Particle.pixmapToParticles(pixmap)
 
   fun getPixMap(t: Texture): Pixmap {
     val td = t.textureData
@@ -31,10 +33,11 @@ class FirstScreen : KtxScreen {
 
   override fun render(delta: Float) {
     clearScreen(red = 0.7f, green = 0.7f, blue = 0.7f)
-
-
-    batch.use {
-      it.draw(image, 100f, 160f)
+    batch.use { b ->
+      particles.forEach { p ->
+        batch.color.set(p.color)
+        b.draw(image, p.xf, p.xy, 1f, 1f)
+      }
     }
   }
 

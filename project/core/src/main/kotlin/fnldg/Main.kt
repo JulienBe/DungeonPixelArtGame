@@ -1,16 +1,18 @@
 package fnldg
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.Texture.TextureFilter.Linear
+import com.badlogic.gdx.graphics.Texture.TextureFilter.Nearest
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
 import ktx.assets.disposeSafely
 import ktx.assets.toInternalFile
-import ktx.collections.GdxArray
 import ktx.graphics.use
 
 class Main : KtxGame<KtxScreen>() {
@@ -21,7 +23,8 @@ class Main : KtxGame<KtxScreen>() {
 }
 
 class FirstScreen : KtxScreen {
-  private val cam = OrthographicCamera(640f, 480f)
+  private val cam = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
+  private val particleImage = Texture("square.png".toInternalFile(), true).apply { setFilter(Nearest, Nearest) }
   private val image = Texture("logo.png".toInternalFile(), true).apply { setFilter(Linear, Linear) }
   private val batch = SpriteBatch()
   private val particles = Particle.pixmapToParticles(getPixMap(image))
@@ -42,8 +45,8 @@ class FirstScreen : KtxScreen {
     cam.update()
     batch.use(cam.combined) { b ->
       particles.forEach { p ->
-        batch.color.set(p.color)
-        b.draw(image, p.xf, p.xy, 1f, 1f)
+        batch.color = batch.color.set(p.color)
+        b.draw(particleImage, p.xf * pixelSize, p.xy * pixelSize, pixelSize, pixelSize)
       }
     }
   }
@@ -51,5 +54,9 @@ class FirstScreen : KtxScreen {
   override fun dispose() {
     image.disposeSafely()
     batch.disposeSafely()
+  }
+
+  companion object {
+    private val pixelSize = 4f
   }
 }

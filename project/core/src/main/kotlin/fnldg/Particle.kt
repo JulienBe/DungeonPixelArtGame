@@ -1,11 +1,14 @@
 package fnldg
 
 import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.math.Rectangle
 import ktx.collections.GdxArray
 
 data class Particle(var x: Int, var y: Int, val color: Int) {
   var xf = x.toFloat()
-  var xy = y.toFloat()
+  var yf = y.toFloat()
+  // yeah don't care about allocations in this project
+  val rect = Rectangle(xf * FirstScreen.pixelSize, yf * FirstScreen.pixelSize, FirstScreen.pixelSize, FirstScreen.pixelSize)
 
   companion object {
     fun pixmapToParticles(pixmap: Pixmap): GdxArray<Particle> {

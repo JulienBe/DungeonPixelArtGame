@@ -1,18 +1,19 @@
 package fnldg
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.Texture.TextureFilter.Linear
 import com.badlogic.gdx.graphics.Texture.TextureFilter.Nearest
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Rectangle
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
 import ktx.assets.disposeSafely
 import ktx.assets.toInternalFile
+import ktx.collections.GdxArray
 import ktx.graphics.use
 
 class Main : KtxGame<KtxScreen>() {
@@ -26,8 +27,10 @@ class FirstScreen : KtxScreen {
   private val cam = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
   private val particleImage = Texture("square.png".toInternalFile(), true).apply { setFilter(Nearest, Nearest) }
   private val image = Texture("logo.png".toInternalFile(), true).apply { setFilter(Linear, Linear) }
+  private val selectedImage = Texture("selected.png".toInternalFile(), true).apply { setFilter(Nearest, Nearest) }
   private val batch = SpriteBatch()
   private val particles = Particle.pixmapToParticles(getPixMap(image))
+  private val selectedParticles = GdxArray<Particle>()
 
   override fun show() {
     super.show()
@@ -46,8 +49,18 @@ class FirstScreen : KtxScreen {
     batch.use(cam.combined) { b ->
       particles.forEach { p ->
         batch.color = batch.color.set(p.color)
-        b.draw(particleImage, p.xf * pixelSize, p.xy * pixelSize, pixelSize, pixelSize)
+        b.draw(particleImage, p.xf * pixelSize, p.yf * pixelSize, pixelSize, pixelSize)
       }
+      selectedParticles.forEach { p ->
+        batch.color = batch.color.set(p.color)
+        b.draw(selectedImage, p.xf * pixelSize, p.yf * pixelSize, pixelSize, pixelSize)
+      }
+    }
+    println(selectedParticles.size)
+    if (Gdx.input.justTouched()) {
+      val y: Float = (Gdx.graphics.height - Gdx.input.y).toFloat()
+      val x: Float = Gdx.input.x.toFloat()
+      particles.filter { it.rect.contains(x, y) }.forEach { selectedParticles.add(it) }
     }
   }
 
@@ -57,6 +70,6 @@ class FirstScreen : KtxScreen {
   }
 
   companion object {
-    private val pixelSize = 4f
+    val pixelSize = 32f
   }
 }

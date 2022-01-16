@@ -15,7 +15,7 @@ data class Particle(var x: Int, var y: Int, val color: Int) {
       val particles = GdxArray<Particle>()
       for (x in 0..pixmap.width)
         for (y in 0..pixmap.height)
-          particles.add(Particle(x, y, pixmap.getPixel(x, y)))
+          particles.add(Particle(x, (pixmap.height - 1) - y, pixmap.getPixel(x, y)))
       return particles
     }
   }

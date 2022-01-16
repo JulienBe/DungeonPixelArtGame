@@ -14,6 +14,7 @@ import ktx.app.clearScreen
 import ktx.assets.disposeSafely
 import ktx.assets.toInternalFile
 import ktx.collections.GdxArray
+import ktx.collections.contains
 import ktx.graphics.use
 
 class Main : KtxGame<KtxScreen>() {
@@ -26,7 +27,7 @@ class Main : KtxGame<KtxScreen>() {
 class FirstScreen : KtxScreen {
   private val cam = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
   private val particleImage = Texture("square.png".toInternalFile(), true).apply { setFilter(Nearest, Nearest) }
-  private val image = Texture("logo.png".toInternalFile(), true).apply { setFilter(Linear, Linear) }
+  private val image = Texture("run1.png".toInternalFile(), true).apply { setFilter(Linear, Linear) }
   private val selectedImage = Texture("selected.png".toInternalFile(), true).apply { setFilter(Nearest, Nearest) }
   private val batch = SpriteBatch()
   private val particles = Particle.pixmapToParticles(getPixMap(image))
@@ -56,11 +57,16 @@ class FirstScreen : KtxScreen {
         b.draw(selectedImage, p.xf * pixelSize, p.yf * pixelSize, pixelSize, pixelSize)
       }
     }
-    println(selectedParticles.size)
     if (Gdx.input.justTouched()) {
       val y: Float = (Gdx.graphics.height - Gdx.input.y).toFloat()
       val x: Float = Gdx.input.x.toFloat()
-      particles.filter { it.rect.contains(x, y) }.forEach { selectedParticles.add(it) }
+      val clicked = particles.firstOrNull { it.rect.contains(x, y) }
+      if (clicked != null) {
+        if (selectedParticles.contains(clicked, true))
+          selectedParticles.removeValue(clicked, true)
+        else
+          selectedParticles.add(clicked)
+      }
     }
   }
 
@@ -70,6 +76,6 @@ class FirstScreen : KtxScreen {
   }
 
   companion object {
-    val pixelSize = 32f
+    val pixelSize = 34f
   }
 }

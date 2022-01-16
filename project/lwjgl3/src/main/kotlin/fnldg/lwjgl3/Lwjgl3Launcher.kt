@@ -10,7 +10,8 @@ import fnldg.Main
 fun main() {
   Lwjgl3Application(Main(), Lwjgl3ApplicationConfiguration().apply {
     setTitle("FinalDungeon")
-    setWindowedMode(1600, 1280)
+    useVsync(true)
+    setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
     setWindowIcon(*(arrayOf(128, 64, 32, 16).map { "libgdx$it.png" }.toTypedArray()))
   })
 }

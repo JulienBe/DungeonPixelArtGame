@@ -1,14 +1,18 @@
 package fnldg
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.math.Rectangle
 import ktx.collections.GdxArray
 
-data class Particle(var x: Int, var y: Int, val color: Int) {
+data class Particle(var x: Int, var y: Int, val originalColor: Int) {
+  // if it's transparent, use something else
+  val color: Color = if (originalColor == 0) Color.BLACK else Color(originalColor)
   var xf = x.toFloat()
   var yf = y.toFloat()
   // yeah don't care about allocations in this project
   val rect = Rectangle(xf * FirstScreen.pixelSize, yf * FirstScreen.pixelSize, FirstScreen.pixelSize, FirstScreen.pixelSize)
+  val tags = GdxArray<Tag>()
 
   companion object {
     fun pixmapToParticles(pixmap: Pixmap): GdxArray<Particle> {
@@ -20,3 +24,5 @@ data class Particle(var x: Int, var y: Int, val color: Int) {
     }
   }
 }
+
+data class Tag(val name: String)

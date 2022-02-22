@@ -22,7 +22,6 @@ class Main : KtxGame<KtxScreen>() {
 
 class FirstScreen : KtxScreen {
   private val cam = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
-  private val particleImage = Texture("square.png".toInternalFile(), true).apply { setFilter(Nearest, Nearest) }
   private val image = Texture("run1.png".toInternalFile(), true).apply { setFilter(Linear, Linear) }
   private val selectedImage = Texture("selected.png".toInternalFile(), true).apply { setFilter(Nearest, Nearest) }
   private val batch = SpriteBatch()
@@ -30,6 +29,7 @@ class FirstScreen : KtxScreen {
 
   override fun show() {
     super.show()
+    GTextures.load()
     cam.position.set(cam.viewportWidth / 2f, cam.viewportHeight / 2f, 0f)
     Gdx.input.inputProcessor = Input(sharedState)
   }
@@ -40,7 +40,7 @@ class FirstScreen : KtxScreen {
     batch.use(cam.combined) { b ->
       sharedState.particles.forEach { p ->
         batch.color = batch.color.set(p.color)
-        b.draw(particleImage, p.xf * pixelSize, p.yf * pixelSize, pixelSize, pixelSize)
+        b.draw(GTextures.pixel, p.xf * pixelSize, p.yf * pixelSize, pixelSize, pixelSize)
       }
       sharedState.selectedParticles.forEach { p ->
         batch.color = batch.color.set(p.color)

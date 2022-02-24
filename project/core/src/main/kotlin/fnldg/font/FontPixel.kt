@@ -1,16 +1,18 @@
 package fnldg.font
 
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.utils.Pool
-import fnldg.GTextures
+import ktx.assets.pool
+import fnldg.colors.Palette
+import fnldg.g.GTextures
 import fnldg.g.GBatch
 import fnldg.g.GRnd
 import fnldg.g.GTime
 
 class FontPixel private constructor() {
 
-  lateinit var colors: FloatArray
-  lateinit var colors3d: FloatArray
+  var colors: FloatArray = floatArrayOf(Palette.BLUE.f)
+  var colors3d: FloatArray = floatArrayOf(Palette.PINK.f)
+  var maxIndex = 0
   var index = 0
   var next = GRnd.nextInt(48)
   var x = 0f
@@ -21,8 +23,8 @@ class FontPixel private constructor() {
   private var speedY = 0f
   private var indexIncreaseInt = 1 + GRnd.nextInt(19)
 
-  fun drawTextDisplay(batch: GBatch, xOffset: Float, yOffset: Float, fontSize: FontSize): Boolean {
-    index = MathUtils.clamp(index, 0, 4)
+  fun display(batch: GBatch, xOffset: Float, yOffset: Float, size: FontPixelSize): Boolean {
+    index = MathUtils.clamp(index, 0, maxIndex)
     if (GTime.alternate) {
       x += speedX
       y += speedY
@@ -32,9 +34,9 @@ class FontPixel private constructor() {
       y -= maxSpeed.coerceAtMost((y - anchorY) / anchorStrength)
     }
     batch.setColor(colors3d[index])
-    batch.draw(GTextures.pixel, x, y, fontSize.w3d, fontSize.w3d)
+    batch.draw(GTextures.pixel, xOffset + x, yOffset + y, size.w3d, size.w3d)
     batch.setColor(colors[index])
-    batch.draw(GTextures.pixel, xOffset + x, yOffset + y, fontSize.pixelW, fontSize.pixelW)
+    batch.draw(GTextures.pixel, xOffset + x, yOffset + y, size.wF, size.wF)
     if (GTime.to20 == indexIncreaseInt)
       index++
     return false
@@ -45,11 +47,7 @@ class FontPixel private constructor() {
   }
 
   companion object {
-    private val pool = object : Pool<FontPixel>() {
-      override fun newObject(): FontPixel {
-        return FontPixel()
-      }
-    }
+    private val pool = pool() { FontPixel() }
     const val anchorStrength = 2.6f
     const val maxSpeed = 8f
 
@@ -57,14 +55,11 @@ class FontPixel private constructor() {
       pool.free(p)
     }
 
-    fun obtain(elemIndex: Int): FontPixel {
+    fun obtain(): FontPixel {
       val p = pool.obtain()
-//            p.colors = elems.bright
-//            p.colors3d = elems.bright
-      if (GRnd.nextBoolean())
-        p.x = GRnd.gauss(5f)
-      else
-        p.y = GRnd.gauss(5f)
+      p.colors = floatArrayOf(Palette.BLUE.f)
+      p.colors3d = floatArrayOf(Palette.PINK.f)
+      p.maxIndex = p.colors.size - 1
       return p
     }
   }

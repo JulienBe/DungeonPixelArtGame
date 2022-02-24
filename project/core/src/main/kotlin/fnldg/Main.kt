@@ -5,7 +5,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.Texture.TextureFilter.Linear
 import com.badlogic.gdx.graphics.Texture.TextureFilter.Nearest
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import fnldg.g.GBatch
+import fnldg.g.GTextures
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
@@ -24,7 +25,7 @@ class FirstScreen : KtxScreen {
   private val cam = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
   private val image = Texture("run1.png".toInternalFile(), true).apply { setFilter(Linear, Linear) }
   private val selectedImage = Texture("selected.png".toInternalFile(), true).apply { setFilter(Nearest, Nearest) }
-  private val batch = SpriteBatch()
+  private val batch = GBatch()
   private val sharedState = BooooooooSharedState(image)
 
   override fun show() {
@@ -46,6 +47,7 @@ class FirstScreen : KtxScreen {
         batch.color = batch.color.set(p.color)
         b.draw(selectedImage, p.xf * pixelSize, p.yf * pixelSize, pixelSize, pixelSize)
       }
+      Display.act(b)
     }
   }
 

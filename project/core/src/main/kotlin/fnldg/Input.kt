@@ -2,14 +2,29 @@ package fnldg
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import fnldg.mode.Mode
+import fnldg.mode.SelectPixel
 import ktx.app.KtxInputAdapter
+import ktx.collections.GdxArray
 
-class Input(val sharedState: BooooooooSharedState, var mode: Mode = Mode.SELECT_PIXEL) : KtxInputAdapter {
+object Input : KtxInputAdapter {
+
+  private var mode: Mode = SelectPixel
+  val KeyPressed = GdxArray<Input.Keys>()
+  val touch = GdxArray<ScreenCoord>()
+  val keyToState = mapOf(
+    Input.Keys.S  to SelectPixel,
+    Input.Keys.F2 to SelectPixel,
+  )
+
+  fun newFrame() {
+    KeyPressed.clear()
+    touch.forEach { ScreenCoord.pool.free(it) }
+  }
 
   override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
     val y: Float = (Gdx.graphics.height - Gdx.input.y).toFloat()
     val x: Float = Gdx.input.x.toFloat()
-    mode.clicked.invoke(x, y, sharedState)
     return super.touchDown(screenX, screenY, pointer, button)
   }
 
@@ -24,31 +39,4 @@ class Input(val sharedState: BooooooooSharedState, var mode: Mode = Mode.SELECT_
     this.mode = mode
   }
 
-  companion object {
-    val keyToState = mapOf(
-      Input.Keys.A  to Mode.ADD_TAG,
-      Input.Keys.F1 to Mode.ADD_TAG,
-      Input.Keys.S  to Mode.SELECT_PIXEL,
-      Input.Keys.F2 to Mode.SELECT_PIXEL,
-    )
-  }
-}
-
-enum class Mode(val clicked: (Float, Float, BooooooooSharedState) -> Unit) {
-  SELECT_PIXEL(
-    clicked = { x, y, state ->
-      val clicked = state.particles.firstOrNull { it.rect.contains(x, y) }
-      if (clicked != null) {
-        if (state.selectedParticles.contains(clicked, true))
-          state.selectedParticles.removeValue(clicked, true)
-        else
-          state.selectedParticles.add(clicked)
-      }
-    }
-  ),
-  ADD_TAG(
-    clicked = { x, y, state ->
-
-    }
-  )
 }

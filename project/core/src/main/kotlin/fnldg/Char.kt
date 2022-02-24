@@ -1,4 +1,0 @@
-package fnldg
-
-class Char {
-}

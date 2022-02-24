@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import kotlin.math.roundToInt
 
-class GBatch(i: Int) : SpriteBatch(i) {
+class GBatch : SpriteBatch() {
 
   fun draw(tr: TextureRegion, x: Int, y: Int, w: Float, h: Float) {
     draw(tr, x.toFloat(), y.toFloat(), w, h)

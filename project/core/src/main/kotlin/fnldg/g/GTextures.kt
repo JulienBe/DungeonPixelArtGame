@@ -1,4 +1,4 @@
-package fnldg
+package fnldg.g
 
 import com.badlogic.gdx.graphics.Texture
 import ktx.assets.toInternalFile

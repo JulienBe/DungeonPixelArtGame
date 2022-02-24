@@ -48,7 +48,7 @@ enum class Mode(val clicked: (Float, Float, BooooooooSharedState) -> Unit) {
   ),
   ADD_TAG(
     clicked = { x, y, state ->
-
+      Display.add(PopupWin(15f, 15f), Layer.UI)
     }
   )
 }

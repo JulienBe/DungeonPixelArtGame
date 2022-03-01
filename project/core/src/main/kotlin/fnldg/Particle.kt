@@ -3,6 +3,7 @@ package fnldg
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.math.Rectangle
+import fnldg.ui.Screen
 import ktx.collections.GdxArray
 
 data class Particle(var x: Int, var y: Int, val originalColor: Int) {
@@ -11,7 +12,7 @@ data class Particle(var x: Int, var y: Int, val originalColor: Int) {
   var xf = x.toFloat()
   var yf = y.toFloat()
   // yeah don't care about allocations in this project
-  val rect = Rectangle(xf * FirstScreen.pixelSize, yf * FirstScreen.pixelSize, FirstScreen.pixelSize, FirstScreen.pixelSize)
+  val rect = Rectangle(xf * Screen.pixelSize, yf * Screen.pixelSize, Screen.pixelSize, Screen.pixelSize)
   val tags = GdxArray<Tag>()
 
   companion object {

@@ -1,7 +1,7 @@
 package fnldg.font
 
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.utils.Pool
+import ktx.assets.pool
 import fnldg.colors.Palette
 import fnldg.g.GTextures
 import fnldg.g.GBatch
@@ -13,12 +13,12 @@ class FontPixel private constructor() {
   var colors: FloatArray = floatArrayOf(Palette.BLUE.f)
   var colors3d: FloatArray = floatArrayOf(Palette.PINK.f)
   var maxIndex = 0
-  var index = 0
   var next = GRnd.nextInt(48)
   var x = 0f
   var y = 0f
   var anchorX = 0f
   var anchorY = 0f
+  private var index = 0
   private var speedX = 0f
   private var speedY = 0f
   private var indexIncreaseInt = 1 + GRnd.nextInt(19)
@@ -47,11 +47,7 @@ class FontPixel private constructor() {
   }
 
   companion object {
-    private val pool = object : Pool<FontPixel>() {
-      override fun newObject(): FontPixel {
-        return FontPixel()
-      }
-    }
+    private val pool = pool { FontPixel() }
     const val anchorStrength = 2.6f
     const val maxSpeed = 8f
 

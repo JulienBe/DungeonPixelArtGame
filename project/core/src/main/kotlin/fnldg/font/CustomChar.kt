@@ -73,6 +73,10 @@ class CustomChar : Display {
     pixels.forEach { it.display(batch, x, y, size) }
   }
 
+  fun free() {
+    pool.free(this)
+  }
+
   companion object {
     private val pool = pool { CustomChar() }
     fun obtain(): CustomChar = pool.obtain()

@@ -2,7 +2,7 @@ package fnldg.input
 
 import fnldg.g.GPool
 
-data class ScreenCoord(var x: Float, var y: Float) {
+class ScreenCoord private constructor(var x: Float, var y: Float) {
   fun set(x: Float, y: Float): ScreenCoord {
     this.x = x
     this.y = y

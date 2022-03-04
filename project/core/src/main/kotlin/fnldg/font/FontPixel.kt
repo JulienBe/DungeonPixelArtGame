@@ -1,12 +1,8 @@
 package fnldg.font
 
 import com.badlogic.gdx.math.MathUtils
-import ktx.assets.pool
 import fnldg.colors.Palette
-import fnldg.g.GTextures
-import fnldg.g.GBatch
-import fnldg.g.GRnd
-import fnldg.g.GTime
+import fnldg.g.*
 
 class FontPixel private constructor() {
 
@@ -22,6 +18,14 @@ class FontPixel private constructor() {
   private var speedX = 0f
   private var speedY = 0f
   private var indexIncreaseInt = 1 + GRnd.nextInt(19)
+
+
+  fun init(): FontPixel {
+    colors = floatArrayOf(Palette.BLUE.f)
+    colors3d = floatArrayOf(Palette.PINK.f)
+    maxIndex = colors.size - 1
+    return this
+  }
 
   fun display(batch: GBatch, xOffset: Float, yOffset: Float, size: FontPixelSize): Boolean {
     index = MathUtils.clamp(index, 0, maxIndex)
@@ -42,25 +46,9 @@ class FontPixel private constructor() {
     return false
   }
 
-  fun free() {
-    free(this)
-  }
-
   companion object {
-    private val pool = pool { FontPixel() }
+    val pool = GPool { FontPixel() }
     const val anchorStrength = 2.6f
     const val maxSpeed = 8f
-
-    fun free(p: FontPixel) {
-      pool.free(p)
-    }
-
-    fun obtain(): FontPixel {
-      val p = pool.obtain()
-      p.colors = floatArrayOf(Palette.BLUE.f)
-      p.colors3d = floatArrayOf(Palette.PINK.f)
-      p.maxIndex = p.colors.size - 1
-      return p
-    }
   }
 }

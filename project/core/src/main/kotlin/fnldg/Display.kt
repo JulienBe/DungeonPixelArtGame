@@ -16,7 +16,12 @@ interface Display {
       }
     }
 
-    fun add(display: Display, layer: Layer) = displays.get(layer).add(display)
+    fun add(display: Display, layer: Layer) {
+      val l = displays.get(layer)
+      if (!l.contains(display))
+        l.add(display)
+    }
+
     fun act(batch: GBatch) {
       Layer.values().forEach { layer ->
         displays.get(layer).forEach {

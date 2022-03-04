@@ -1,36 +1,33 @@
 package fnldg.font
 
-import fnldg.Display
 import fnldg.g.GBatch
+import fnldg.g.GPool
 import fnldg.g.GRnd
-import ktx.assets.pool
 import ktx.collections.GdxArray
 
-class CustomChar : Display {
+class CustomChar private constructor() {
   private var char = ' '
   private var pixels = GdxArray<FontPixel>()
   private var x = 0f
   private var y = 0f
-  private var size = FontPixelSize.HYPER
 
   fun init(char: Char, size: FontPixelSize, x: Float, y: Float): CustomChar {
     this.char = char
-    this.size = size
     this.x = x
     this.y = y
-    pixels.forEach { it.free() }
+    pixels.forEach { FontPixel.pool.free(it) }
     pixels.clear()
 
     CharToOffsets.mapping[char]?.forEach { offset ->
-      val fp = FontPixel.obtain()
+      val fp = FontPixel.pool.obtain()
       fp.anchorX = offset.x * size.wF
       fp.anchorY = offset.y * size.wF
       fp.x = fp.anchorX
       fp.y = fp.anchorY
       if (GRnd.nextBoolean())
-        fp.x = GRnd.gauss(6f * size.w)
+        fp.x = GRnd.gauss(6f * size.dotW)
       else
-        fp.y = GRnd.gauss(6f * size.w)
+        fp.y = GRnd.gauss(6f * size.dotW)
       pixels.add(fp)
     }
     return this
@@ -41,13 +38,13 @@ class CustomChar : Display {
     // remove if new char has less pixels
     for (i in 0 until pixels.size - CharToOffsets.mapping[newChar]!!.size) {
       val p = pixels.random()
-      p.free()
+      FontPixel.pool.free(p)
       pixels.removeValue(p, true)
     }
 
     // add if new char has more pixels
     for (i in 0 until CharToOffsets.mapping[newChar]!!.size - pixels.size) {
-      val fp = FontPixel.obtain()
+      val fp = FontPixel.pool.obtain()
       if (!pixels.isEmpty) {
         val ref = pixels.random()
         fp.x = ref.x
@@ -69,16 +66,11 @@ class CustomChar : Display {
     }
   }
 
-  override fun display(batch: GBatch) {
+  fun display(batch: GBatch, size: FontPixelSize) {
     pixels.forEach { it.display(batch, x, y, size) }
   }
 
-  fun free() {
-    pool.free(this)
-  }
-
   companion object {
-    private val pool = pool { CustomChar() }
-    fun obtain(): CustomChar = pool.obtain()
+    val pool = GPool { CustomChar() }
   }
 }

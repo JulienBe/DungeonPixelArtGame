@@ -20,14 +20,13 @@ class CustomChar private constructor() {
 
     CharToOffsets.mapping[char]?.forEach { offset ->
       val fp = FontPixel.pool.obtain()
-      fp.anchorX = offset.x * size.wF
-      fp.anchorY = offset.y * size.wF
-      fp.x = fp.anchorX
-      fp.y = fp.anchorY
+      val anchorX = offset.x * size.wF
+      val anchorY = offset.y * size.wF
+      fp.setAnchor(anchorX, anchorY)
       if (GRnd.nextBoolean())
-        fp.x = GRnd.gauss(6f * size.dotW)
+        fp.setXY(anchorX + GRnd.gauss(6f * size.dotW), anchorY)
       else
-        fp.y = GRnd.gauss(6f * size.dotW)
+        fp.setXY(anchorX, anchorY + GRnd.gauss(6f * size.dotW))
       pixels.add(fp)
     }
     return this
@@ -47,11 +46,9 @@ class CustomChar private constructor() {
       val fp = FontPixel.pool.obtain()
       if (!pixels.isEmpty) {
         val ref = pixels.random()
-        fp.x = ref.x
-        fp.y = ref.y
+        fp.setXY(ref.x, ref.y)
       } else {
-        fp.x = GRnd.absGauss(2f)
-        fp.y = GRnd.absGauss(2f)
+        fp.setXY(fp.x + GRnd.absGauss(2f), fp.y + GRnd.absGauss(2f))
       }
       pixels.add(fp)
     }
@@ -59,9 +56,7 @@ class CustomChar private constructor() {
     // give them their new anchors
     var cpt = 0
     CharToOffsets.mapping[newChar]?.forEach { offset ->
-      val fp = pixels.get(cpt)
-      fp.anchorX = offset.x * size.wF
-      fp.anchorY = offset.y * size.wF
+      pixels.get(cpt).setAnchor(offset.x * size.wF, offset.y * size.wF)
       cpt++
     }
   }

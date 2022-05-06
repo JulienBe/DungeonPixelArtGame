@@ -6,7 +6,7 @@ import fnldg.ui.PopupWin
 
 object AddTag : Mode {
 
-  var window: PopupWin = PopupWin.pool.obtain().init(15f, 15f)
+  private var window: PopupWin = PopupWin.pool.obtain().init(15f, 15f)
 
   override fun transition(fromMode: Mode) {
     Display.add(window, Layer.UI)

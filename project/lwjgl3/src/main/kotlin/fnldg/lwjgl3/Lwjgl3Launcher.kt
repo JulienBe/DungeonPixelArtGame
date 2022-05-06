@@ -11,7 +11,8 @@ fun main() {
   Lwjgl3Application(Main(), Lwjgl3ApplicationConfiguration().apply {
     setTitle("FinalDungeon")
     useVsync(true)
-    setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
+//    setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
+    setWindowedMode(1440, 800)
     setWindowIcon(*(arrayOf(128, 64, 32, 16).map { "libgdx$it.png" }.toTypedArray()))
   })
 }

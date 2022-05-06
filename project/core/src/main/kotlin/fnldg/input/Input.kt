@@ -46,9 +46,9 @@ class Input : KtxInputAdapter {
 
   companion object {
     val keyToState = mapOf(
-      Input.Keys.A to AddTag,
+      Input.Keys.A  to AddTag,
       Input.Keys.F1 to AddTag,
-      Input.Keys.S to SelectPixel,
+      Input.Keys.S  to SelectPixel,
       Input.Keys.F2 to SelectPixel,
     )
   }

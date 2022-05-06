@@ -14,7 +14,7 @@ import ktx.assets.toInternalFile
 import ktx.graphics.use
 
 object Screen : KtxScreen {
-  const val pixelSize = 34f
+  val pixelSize = Gdx.graphics.height.toFloat() / 44f
   private val cam = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
   private val image = Texture("run1.png".toInternalFile(), true).apply { setFilter(
     Texture.TextureFilter.Linear,

@@ -3,7 +3,6 @@ package fnldg.font
 import fnldg.Display
 import fnldg.g.GBatch
 import fnldg.g.GPool
-import fnldg.input.ScreenCoord
 import ktx.collections.GdxArray
 
 class CustomStr private constructor() : Display {
@@ -21,14 +20,28 @@ class CustomStr private constructor() : Display {
   }
 
   override fun display(batch: GBatch) {
-    chars.forEach { it.display(batch, fontSize) }
+    chars.forEach {
+      it.display(batch, fontSize)
+    }
   }
 
-  fun addChar(c: Char, x: Float, y: Float) {
-    chars.add(CustomChar.pool.obtain().init(c, fontSize, x + (chars.size * fontSize.wPlusSpace), y))
+  fun addChar(c: Char, baseX: Float, baseY: Float) {
+    chars.add(CustomChar.pool.obtain().init(c, fontSize, baseX + (chars.size * fontSize.wPlusSpace), baseY))
   }
 
   companion object {
-    val pool = GPool { CustomStr() }
+    private val pool = GPool { CustomStr() }
+
+    fun init(str: String, baseX: Float, baseY: Float): CustomStr {
+      val inst = pool.obtain()
+      str.forEach { c ->
+        inst.addChar(c, baseX, baseY)
+      }
+      return inst
+    }
+
+    fun obtain(): CustomStr {
+      return pool.obtain()
+    }
   }
 }

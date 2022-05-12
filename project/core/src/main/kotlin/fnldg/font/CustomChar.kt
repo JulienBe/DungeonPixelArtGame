@@ -62,10 +62,15 @@ class CustomChar private constructor() {
   }
 
   fun display(batch: GBatch, size: FontPixelSize) {
-    pixels.forEach { it.display(batch, x, y, size) }
+    pixels.forEach {
+      it.display(batch, x, y, size)
+    }
   }
 
   companion object {
     val pool = GPool { CustomChar() }
+    fun obtain(): CustomChar {
+      return pool.obtain()
+    }
   }
 }

@@ -6,4 +6,5 @@ enum class FontPixelSize(val dotW: Int) {
   val wF = dotW.toFloat()
   val w3d = wF + 1.0f
   val wPlusSpace = dotW * 4
+  val height = dotW * 5
 }

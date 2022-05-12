@@ -4,7 +4,7 @@ import fnldg.Display
 import fnldg.Layer
 import fnldg.ui.PopupWin
 
-object AddTag : Mode {
+object AddTag : Mode("Tag") {
 
   private var window: PopupWin = PopupWin.pool.obtain().init(15f, 15f)
 

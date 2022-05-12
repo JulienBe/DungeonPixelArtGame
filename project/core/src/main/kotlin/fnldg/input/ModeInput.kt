@@ -2,13 +2,14 @@ package fnldg.input
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import fnldg.g.GBatch
 import fnldg.ui.mode.AddTag
 import fnldg.ui.mode.Mode
 import fnldg.ui.mode.SelectPixel
 import ktx.app.KtxInputAdapter
 import ktx.collections.GdxArray
 
-class Input : KtxInputAdapter {
+class ModeInput : KtxInputAdapter {
 
   private var mode: Mode = SelectPixel
   private val keys = GdxArray<Input.Keys>()
@@ -42,6 +43,10 @@ class Input : KtxInputAdapter {
   private fun updateState(mode: Mode) {
     this.mode = mode
     this.mode.transition(mode)
+  }
+
+  fun display(b: GBatch) {
+    mode.infoDisplay(b)
   }
 
   companion object {

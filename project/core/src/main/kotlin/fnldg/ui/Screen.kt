@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import fnldg.Display
-import fnldg.input.Input
+import fnldg.input.ModeInput
 import fnldg.g.GBatch
 import fnldg.g.GTextures
 import ktx.app.KtxScreen
@@ -25,7 +25,7 @@ object Screen : KtxScreen {
     Texture.TextureFilter.Nearest
   ) }
   private val batch = GBatch()
-  private val input = Input()
+  private val input = ModeInput()
   val imagePixel = ImagePixel(image)
 
   override fun show() {
@@ -49,6 +49,7 @@ object Screen : KtxScreen {
         b.draw(selectedImage, p.xf * pixelSize, p.yf * pixelSize, pixelSize, pixelSize)
       }
       Display.act(b)
+      input.display(b)
     }
   }
 

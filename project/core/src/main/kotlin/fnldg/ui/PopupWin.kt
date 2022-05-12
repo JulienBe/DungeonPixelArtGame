@@ -2,15 +2,13 @@ package fnldg.ui
 
 import com.badlogic.gdx.math.Rectangle
 import fnldg.Display
-import fnldg.font.CustomChar
 import fnldg.font.CustomStr
-import fnldg.font.FontPixelSize
 import fnldg.g.GBatch
 import fnldg.g.GPool
 
 class PopupWin private constructor(var x: Float, var y: Float) : Display {
   private val rect = Rectangle(x * Screen.pixelSize, y * Screen.pixelSize, Screen.pixelSize * 50, Screen.pixelSize * 10)
-  private val text = CustomStr.pool.obtain()
+  private val text = CustomStr.obtain()
 
   override fun display(batch: GBatch) {
     text.display(batch)
